@@ -1,12 +1,9 @@
-altair
-pandas
 streamlit
-plost
 google-cloud-bigquery
 google-api-core
 google-api-python-client
-altair
-plotly
-webcolors
+pandas
 matplotlib
 pywaffle
+plotly
+webcolors
