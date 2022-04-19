@@ -1,3 +1,6 @@
 
 .streamlit/secrets.toml
 .DS_Store
+__pycache__/base_data.cpython-38.pyc
+__pycache__/funcs.cpython-38.pyc
+__pycache__/lorem.cpython-38.pyc
