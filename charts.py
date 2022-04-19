@@ -1,10 +1,11 @@
 import pandas as pd
-import re
 import plotly.express as px
 import plotly.graph_objects as go
-import streamlit as st
+from pywaffle import Waffle
+import matplotlib.pyplot as plt
 
 
+# Functions
 def chart_map(agged_data, color, color_map, size, size_max, title, title_size):
     fig = px.scatter_geo(agged_data, locations="Country", color=color, color_discrete_map=color_map, size="Head Count", locationmode="country names", size_max=size_max,)
     fig.update_layout(
@@ -98,3 +99,42 @@ def chart_scatter_programs(agged_data, unique_vals, colors, title_size, title):
             font=dict(size=title_size))
     )
     return fig
+
+
+# Specifics
+# # Level Distro Waffle
+def data_level_distro_waffle(df, color_map):
+    mlevel_sort = df.groupby(["Level", "Manual Level"]).size().rename("Count").reset_index()
+    mlevel_sort["group"] = mlevel_sort["Level"].apply(lambda x: x[0])
+    mlevel_sort = mlevel_sort.sort_values(["group", "Level", "Manual Level"], ascending=[True, False, True])
+    mlevel_grp_dict = pd.DataFrame(mlevel_sort["Manual Level"].unique()).rename(columns={0: "mlevel"}).reset_index()
+    mlevel_grp_dict = dict(zip(mlevel_grp_dict["mlevel"], mlevel_grp_dict["index"]))
+    mlevel_sort = mlevel_sort.groupby(["Manual Level"])["Count"].sum().rename("Count").reset_index().reset_index(drop=True)
+    mlevel_sort["order"] = mlevel_sort["Manual Level"].map(mlevel_grp_dict)
+    mlevel_sort["color"] = mlevel_sort["Manual Level"].map(color_map)
+    mlevel_sort = mlevel_sort.sort_values("order").reset_index(drop=True)
+    mlevel_sum = mlevel_sort["Count"].sum()
+    labels = list(zip(mlevel_sort["Manual Level"], mlevel_sort["Count"]))
+    labels = [f"{i[0]}: {i[1]} ({round(i[1] / mlevel_sum * 100, 2)}%)" for i in labels]
+    return mlevel_sort, labels
+
+
+def chart_level_distro_waffle(mlevel_sort, labels):
+    fig = plt.figure(
+        FigureClass=Waffle,
+        rows=9,
+        values=mlevel_sort["Count"].tolist(),
+        colors=mlevel_sort["color"].tolist(),
+        icons="user",
+        font_size=8,
+        icon_legend=True,
+        starting_location="NW",
+        legend=dict(
+            labels=labels,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.15),
+            ncol=4,
+            fontsize=4,
+            framealpha=0))
+    return fig
+
