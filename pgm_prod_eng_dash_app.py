@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from base_data import df, df_values, base_palette, darker_palette, alt2palette, unstacked
 import funcs as f
+import charts as ch
 from lorem import lorem
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -268,7 +269,7 @@ fitbounds = None
 if len(grp_prg_geo["Country"].unique()) > 1:
     fitbounds = "locations"
 
-fig = f.chart_map(agged_data=grp_prg_geo, color="Team", color_map=team_color_map, size="Head Count", size_max=45, title="Teams by Location", title_size=title_size)
+fig = ch.chart_map(agged_data=grp_prg_geo, color="Team", color_map=team_color_map, size="Head Count", size_max=45, title="Teams by Location", title_size=title_size)
 fig.update_layout(
     title=dict(text=None),
     legend=dict(title=dict(text=None), yanchor="top", y=.9),
@@ -436,14 +437,14 @@ chart_height = 450
 grp_srl_pl_mlevel = df_sub_srl.groupby(["Product Line", "Manual Level"]).agg({"Employee Number": "nunique", "%": "sum"}).reset_index().rename(columns={"Employee Number": "Head Count", "%": "FTE Contribution"}).sort_values(["Product Line", "Manual Level"], ascending=True)
 grp_srl_pl_mlevel["color"] = grp_srl_pl_mlevel["Manual Level"].map(ml_color_map)
 grp_srl_pl_mlevel = grp_srl_pl_mlevel[(grp_srl_pl_mlevel["Head Count"] > 0) & (grp_srl_pl_mlevel["FTE Contribution"] > 0)]
-fig = f.chart_h_stacked_bars(agged_data=grp_srl_pl_mlevel, df_values=df_values, stacked_col="Manual Level", xcol="Head Count", ycol="Product Line", orientation="h", color_map=ml_color_map, height=chart_height, title="Head Count by Product Line", title_size=title_size)
+fig = ch.chart_h_stacked_bars(agged_data=grp_srl_pl_mlevel, df_values=df_values, stacked_col="Manual Level", xcol="Head Count", ycol="Product Line", orientation="h", color_map=ml_color_map, height=chart_height, title="Head Count by Product Line", title_size=title_size)
 fig.update_layout(legend=dict(traceorder="normal"))
 col1.plotly_chart(fig, use_container_width=True)
 
 grp_srl_prg_mlevel = df_sub_srl.groupby(["Program Name", "Manual Level"]).agg({"Employee Number": "nunique", "%": "sum"}).reset_index().rename(columns={"Employee Number": "Head Count", "%": "FTE Contribution"}).sort_values(["Program Name", "Manual Level"], ascending=True)
 grp_srl_prg_mlevel["color"] = grp_srl_prg_mlevel["Manual Level"].map(ml_color_map)
 grp_srl_prg_mlevel = grp_srl_prg_mlevel[(grp_srl_prg_mlevel["Head Count"] > 0) & (grp_srl_prg_mlevel["FTE Contribution"] > 0)]
-fig = f.chart_h_stacked_bars(agged_data=grp_srl_prg_mlevel, df_values=df_values, stacked_col="Manual Level", xcol="Head Count", ycol="Program Name", orientation="h", color_map=ml_color_map, height=chart_height, title="Head Count by Program", title_size=title_size)
+fig = ch.chart_h_stacked_bars(agged_data=grp_srl_prg_mlevel, df_values=df_values, stacked_col="Manual Level", xcol="Head Count", ycol="Program Name", orientation="h", color_map=ml_color_map, height=chart_height, title="Head Count by Program", title_size=title_size)
 fig.update_layout(legend=dict(traceorder="normal"))
 col2.plotly_chart(fig, use_container_width=True)
 
