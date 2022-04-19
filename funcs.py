@@ -116,12 +116,6 @@ def color_map(unique_vals, colors):
 def chart_map(agged_data, color, color_map, size, size_max, title, title_size):
     fig = px.scatter_geo(agged_data, locations="Country", color=color, color_discrete_map=color_map, size="Head Count", locationmode="country names", size_max=size_max,)
     fig.update_layout(
-        # legend=dict(
-        #     yanchor="bottom",
-        #     y=-.5,
-        #     xanchor="center",
-        #     x=.5,
-        #     orientation="h"),
         title=dict(
             text=title,
             font=dict(
@@ -146,13 +140,6 @@ def chart_donut(agged_data, label_col, value_col, title, title_size, showlegend=
         uniformtext_minsize=11,
         uniformtext_mode="hide",
         showlegend=showlegend,
-        # legend=dict(
-        #     xanchor="right",
-        #     yanchor="top",
-        #     x=1.85,
-        #     y=-1,
-        #     orientation="h"
-        # ),
         title=dict(
             text=title,
             font=dict(size=title_size))
@@ -211,15 +198,11 @@ def chart_scatter_programs(agged_data, unique_vals, colors, title_size, title):
                 color=colors[i])))
     fig.update_layout(
         height=600,
-        xaxis=dict(
-            title="Head Count"),
-        yaxis=dict(
-            title="FTE Contribution"),
-        legend=dict(
-            itemsizing="constant"),
+        xaxis=dict(title="Head Count"),
+        yaxis=dict(title="FTE Contribution"),
+        legend=dict(itemsizing="constant"),
         title=dict(
             text=title,
-            font=dict(
-                size=title_size))
+            font=dict(size=title_size))
     )
     return fig
