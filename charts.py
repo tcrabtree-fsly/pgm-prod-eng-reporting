@@ -138,3 +138,53 @@ def chart_level_distro_waffle(mlevel_sort, labels):
             framealpha=0))
     return fig
 
+
+def chart_overview_grp_bar_head_fte(df, color_palette):
+    fig = px.bar(df, x=["Head Count", "FTE Contribution"], y="Product Line", orientation="h", barmode="group", color_discrete_sequence=color_palette, height=450)
+    fig.update_layout(
+        xaxis_title=None, yaxis_title=None,
+        yaxis=dict(categoryorder="category descending"),
+        legend=dict(title=dict(text=None), traceorder="reversed"))
+    return fig
+
+
+def chart_pl_level_distro_bar(df_values, df, x1, y1, x2, y2, color_map, title_size):
+    fig = go.Figure()
+    for i in range(len(df_values["Manual Level"])):
+        nm = df_values["Manual Level"][i]
+        df_ = df[df["Manual Level"] == nm]
+        fig.add_trace(go.Bar(
+            y=df_[y1],
+            x=df_[x1],
+            name=nm,
+            text=df_["Manual Level"],
+            textposition="none",
+            hovertemplate="%{text}=%{x} FTEs<extra></extra>",
+            marker=dict(color=color_map[nm]),
+            orientation="h"
+        ))
+    for i in range(len(df_values["Manual Level"])):
+        nm = df_values["Manual Level"][i]
+        df_ = df[df["Manual Level"] == nm]
+        fig.add_trace(go.Bar(
+            y=df_[y2],
+            x=df_[x2],
+            name=nm,
+            text=df_["Manual Level"],
+            textposition="none",
+            hovertemplate="%{text}=%{x} head count<extra></extra>",
+            marker=dict(color=color_map[nm]),
+            orientation="h",
+            showlegend=False
+        ))
+    fig.update_layout(
+        barmode="stack",
+        height=450,
+        yaxis=dict(categoryorder="category descending"),
+        title=dict(
+            text="Distribution by Manual Level",
+            font=dict(size=title_size)),
+        legend=dict(traceorder="normal")
+    )
+    return fig
+
