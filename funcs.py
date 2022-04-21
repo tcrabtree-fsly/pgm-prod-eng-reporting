@@ -97,10 +97,11 @@ def unique_values_in_column(df):
 
 
 # This function needs to be revisited
-def agg_data_count_fte(df, group_cols, sort_by_cols, color_map, **kwargs):
+def agg_data_count_fte(df, group_cols, sort_by_cols, color_col="Product Line", color_map=False, **kwargs):
     grouped = df.groupby(group_cols)[["Employee Number", "%"]].agg({"Employee Number": "nunique", "%": "sum"}).reset_index().rename(columns={"Employee Number": "Head Count", "%": "FTE Contribution"})
     grouped = grouped.sort_values(sort_by_cols, **kwargs)
-    grouped["color"] = grouped["Product Line"].map(color_map)
+    if color_map is not False:
+        grouped["color"] = grouped[color_col].map(color_map)
     return grouped
 
 
