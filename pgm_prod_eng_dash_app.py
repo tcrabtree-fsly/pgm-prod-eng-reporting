@@ -46,7 +46,8 @@ st.sidebar.info("""
 
 # Body
 st.title("Product + Engineering Resource Status")
-
+dept_filter = st.multiselect("Filter by Department", df["Dept"].unique(), df["Dept"].unique())
+df = df[df["Dept"].isin(dept_filter)]
 #
 # Pgm-ProdOps-ENG Overview
 #
